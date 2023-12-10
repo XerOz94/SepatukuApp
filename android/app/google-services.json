@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191481072680",
+    "project_id": "sepatukuapp",
+    "storage_bucket": "sepatukuapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191481072680:android:6b32b89f6ee16fe70c791d",
+        "android_client_info": {
+          "package_name": "com.example.sepatuku_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjbO_eaaXzRL52QOlD9MDwFKIRz8RXylQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
