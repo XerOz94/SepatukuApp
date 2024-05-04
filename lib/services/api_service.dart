@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:sepatuku_app/data.dart';
+import 'package:sepatuku_app/model/data.dart';
 
 
 class ApiService {

@@ -21,6 +21,23 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\AMD\\.gradle\\caches\\transforms-3\\17fa2f85f92887a239732fa789549c4f\\transformed\\jetified-play-services-basement-18.3.0\\res\\values-ca\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "130",
+                        "endOffsets": "325"
+                    },
+                    "to": {
+                        "startLines": "17",
+                        "startColumns": "4",
+                        "startOffsets": "1787",
+                        "endColumns": "134",
+                        "endOffsets": "1917"
+                    }
+                },
+                {
                     "source": "C:\\Users\\AMD\\.gradle\\caches\\transforms-3\\d12883dde0390e08dd2a1192741cec1b\\transformed\\browser-1.5.0\\res\\values-ca\\values-ca.xml",
                     "from": {
                         "startLines": "2,3,4,5",
@@ -52,23 +69,6 @@
                         "startOffsets": "55,151,253,352,449,555,660,3470",
                         "endColumns": "95,101,98,96,105,104,125,100",
                         "endOffsets": "146,248,347,444,550,655,781,3566"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\AMD\\.gradle\\caches\\transforms-3\\58aa1384bde170d075503b845cfcf44c\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-ca\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "130",
-                        "endOffsets": "325"
-                    },
-                    "to": {
-                        "startLines": "17",
-                        "startColumns": "4",
-                        "startOffsets": "1787",
-                        "endColumns": "134",
-                        "endOffsets": "1917"
                     }
                 }
             ]

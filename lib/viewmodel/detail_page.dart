@@ -3,8 +3,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sepatuku_app/services/database_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'data.dart';
+import 'package:sepatuku_app/model/data.dart';
 
 class DetailPage extends StatefulWidget {
   final SepatuModel data;
@@ -16,7 +17,13 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  late Future<bool> _isFavoriteFuture;
   int _selectedTabIndex = 0;
+  
+  void initState() {
+    super.initState();
+    _isFavoriteFuture = DatabaseHelper.isFavorite(widget.data.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +37,9 @@ class _DetailPageState extends State<DetailPage> {
           children: [
             Text('Sepatu',
                 style: GoogleFonts.raleway(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87)),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                )),
             Text('Ku',
                 style: GoogleFonts.raleway(
                     fontSize: 32,
@@ -41,19 +48,21 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
         leading: IconButton(
-          icon: Icon(Icons.stacked_line_chart, color: Colors.blue),
-          onPressed: () {},
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: toggleFavorite,
               icon: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: Colors.black,
+                widget.data.isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_outline,
+                color: widget.data.isFavorite ? Colors.red : Colors.grey,
               ),
             ),
           ),
@@ -83,7 +92,8 @@ class _DetailPageState extends State<DetailPage> {
                       _selectedTabIndex = 0;
                     });
                   },
-                  child: Text('Review'),
+                  child: Text('Review',
+                      style: TextStyle(color: Colors.blueAccent)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -92,7 +102,8 @@ class _DetailPageState extends State<DetailPage> {
                       _selectedTabIndex = 1;
                     });
                   },
-                  child: Text('Shoe Info'),
+                  child: Text('Shoe Info',
+                      style: TextStyle(color: Colors.blueAccent)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -101,7 +112,8 @@ class _DetailPageState extends State<DetailPage> {
                       _selectedTabIndex = 2;
                     });
                   },
-                  child: Text('Shop'),
+                  child:
+                      Text('Shop', style: TextStyle(color: Colors.blueAccent)),
                 ),
               ],
             ),
@@ -130,7 +142,9 @@ class _DetailPageState extends State<DetailPage> {
                             widget.data.description,
                             textAlign: TextAlign.justify,
                             style: GoogleFonts.raleway(
-                                color: Colors.white, fontSize: 16,),
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -138,8 +152,8 @@ class _DetailPageState extends State<DetailPage> {
                   )
                 : _selectedTabIndex == 1
                     ? Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: GridView.count(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GridView.count(
                           crossAxisCount: 1,
                           childAspectRatio: 4,
                           shrinkWrap: true,
@@ -256,11 +270,11 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                               ),
                             ),
-                    
+
                             // ... widget berikutnya ...
                           ],
                         ),
-                    )
+                      )
                     : _selectedTabIndex == 2
                         ? Padding(
                             padding:
@@ -301,5 +315,29 @@ class _DetailPageState extends State<DetailPage> {
         ),
       ),
     );
+  }
+
+  void toggleFavorite() async {
+    if (widget.data.isFavorite) {
+      // Hapus dari favorit jika sudah ada
+      await DatabaseHelper.deleteFavorite(widget.data.id);
+    } else {
+      // Tambahkan ke favorit jika belum ada
+      await DatabaseHelper.insertFavorite({
+        'id': widget.data.id,
+        'name': widget.data.name,
+        'image': widget.data.image,
+        'description': widget.data.description,
+        'price': widget.data.price,
+        'merk': widget.data.merk,
+        'rilis': widget.data.rilis,
+        'material': widget.data.material,
+        'shop': widget.data.shop,
+      });
+    }
+
+    setState(() {
+      widget.data.isFavorite = !widget.data.isFavorite;
+    });
   }
 }

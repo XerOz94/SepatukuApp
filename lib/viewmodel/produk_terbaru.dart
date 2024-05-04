@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:stroke_text/stroke_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/DetailPage.dart';
-import 'package:sepatuku_app/data.dart';
+import 'package:sepatuku_app/viewmodel/detail_page.dart';
+import 'package:sepatuku_app/model/data.dart';
 
 class ProdukTerbaru extends StatelessWidget {
   final int index;
@@ -64,7 +64,7 @@ class ProdukTerbaru extends StatelessWidget {
                             textStyle: GoogleFonts.raleway(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                              color: Colors.black,
+                             
                             ),
                             strokeColor: Colors.blue,
                             strokeWidth: 0,
@@ -80,7 +80,7 @@ class ProdukTerbaru extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                backgroundColor: Colors.black,
+                                // backgroundColor: Colors.black,
                               ),
                               onPressed: () {
                                 Navigator.push(
@@ -92,7 +92,7 @@ class ProdukTerbaru extends StatelessWidget {
                               },
                               child: Text(
                                 "Baca",
-                                style:  GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold),
+                                style:  GoogleFonts.raleway(color: Colors.blue, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

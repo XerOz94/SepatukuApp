@@ -4,8 +4,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/login.dart';
-import 'package:sepatuku_app/register.dart';
+import 'package:sepatuku_app/view/login.dart';
+import 'package:sepatuku_app/view/register.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -36,7 +36,15 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget build(BuildContext context) {
+    // final text = MediaQuery.of(context).platformBrightness == Brightness.dark ? 'DarkTheme' : 'LighTheme';
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Colors.blue,
+      //   title: Text("On Boarding Page"),
+      //   actions: [
+      //     ChangeThemeButtonWidget(),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -76,8 +84,7 @@ class _HomePage extends State<HomePage> {
                     'Sepatu',
                     style: GoogleFonts.raleway(
                       fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      fontWeight: FontWeight.bold
                     ),
                   ),
                   Text(
@@ -143,3 +150,5 @@ class _HomePage extends State<HomePage> {
     );
   }
 }
+
+

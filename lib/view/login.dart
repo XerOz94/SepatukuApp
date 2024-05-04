@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sepatuku_app/SepatukuPage.dart';
-import 'package:sepatuku_app/home_page.dart';
+import 'package:sepatuku_app/view/OnBoardingPage.dart';
+import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
+// import 'package:sepatuku_app/home_page.dart';
 import 'register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sepatuku_app/services/firebase_auth_service.dart';

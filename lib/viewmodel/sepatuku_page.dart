@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/MaintancePage.dart';
-import 'package:sepatuku_app/ProdukPage.dart';
-import 'package:sepatuku_app/bottomNavbar.dart';
-import 'package:sepatuku_app/home_page.dart';
-import 'package:sepatuku_app/item_listview.dart';
-import 'package:sepatuku_app/profile_page.dart';
-import 'package:sepatuku_app/data.dart';
+import 'package:sepatuku_app/view/MaintancePage.dart';
+import 'package:sepatuku_app/view/favourite_page.dart';
+import 'package:sepatuku_app/viewmodel/produk_terbaru.dart';
+import 'package:sepatuku_app/view/bottomNavbar.dart';
+import 'package:sepatuku_app/provider/change_theme_widget.dart';
+import 'package:sepatuku_app/view/item_listview.dart';
+import 'package:sepatuku_app/viewmodel/profile_page.dart';
+import 'package:sepatuku_app/model/data.dart';
 import 'package:sepatuku_app/services/api_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -43,7 +44,7 @@ class _SepatukuPageState extends State<SepatukuPage> {
                   style: GoogleFonts.raleway(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87)),
+                      )),
               Text('Ku',
                   style: GoogleFonts.raleway(
                       fontSize: 32,
@@ -56,20 +57,7 @@ class _SepatukuPageState extends State<SepatukuPage> {
             onPressed: () {},
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
-                  ));
-                },
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
+            ChangeThemeButtonWidget()
           ],
         ),
         body: SingleChildScrollView(
@@ -199,7 +187,7 @@ class _SepatukuPageState extends State<SepatukuPage> {
       margin: EdgeInsets.symmetric(horizontal: 3.0),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: index == currentIndex % 5 ? Colors.blue : Colors.grey,
+        color: index == currentIndex % 5 ? Colors.blue : Colors.grey.shade300,
       ),
     );
   }
@@ -212,7 +200,7 @@ Widget _buildPage(int index) {
         title: 'Sepatuku',
       );
     case 1:
-      return MaintancePage();
+      return FavouritePage();
     case 2:
       return ProfilePage();
     default:

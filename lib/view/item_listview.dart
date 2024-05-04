@@ -1,8 +1,8 @@
 // item_user.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'data.dart';
-import 'DetailPage.dart';
+import 'package:sepatuku_app/model/data.dart';
+import '../viewmodel/detail_page.dart';
 
 class ItemUser extends StatelessWidget {
   final int index;
@@ -78,17 +78,6 @@ class ItemUser extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   data.name,
-                    //   style: GoogleFonts.raleway(
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.bold,
-                    //     color: Colors.white,
-                    //   ),
-                    //   maxLines: 2, // Membatasi menjadi 2 baris
-                    //   overflow: TextOverflow.ellipsis,
-                    // ),
-                    // SizedBox(height: 4),
                     Text(
                       data.description,
                       maxLines: 3,

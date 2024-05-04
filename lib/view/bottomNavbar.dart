@@ -16,14 +16,14 @@ class BotNavbar extends StatelessWidget {
     return CurvedNavigationBar(
       items: const <Widget>[
         Icon(CupertinoIcons.house, size: 30, color: Colors.blueAccent),
-        Icon(CupertinoIcons.add, size: 30, color: Colors.blueAccent),
+        Icon(CupertinoIcons.heart_fill, size: 30, color: Colors.blueAccent),
         Icon(CupertinoIcons.profile_circled, size: 30, color: Colors.blueAccent),
       ],
-      color: Color.fromARGB(255, 255, 255, 255),
-      buttonBackgroundColor: Color.fromARGB(255, 255, 255, 255),
-      backgroundColor: Colors.white,
+      // color: Color.fromARGB(255, 255, 255, 255),
+      // buttonBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+      // backgroundColor: Colors.white,
       animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 400),
+      animationDuration: const Duration(milliseconds: 1000),
       onTap: onTap,
       letIndexChange: (index) => true,
       index: currentIndex,
@@ -31,11 +31,3 @@ class BotNavbar extends StatelessWidget {
     );
   }
 }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: Scaffold(
-//       bottomNavigationBar: BotNavbar(),
-//     ),
-//   ));
-// }

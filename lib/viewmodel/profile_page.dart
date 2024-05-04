@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/MaintancePage.dart';
-import 'package:sepatuku_app/SepatukuPage.dart';
-import 'package:sepatuku_app/bottomNavbar.dart';
-import 'package:sepatuku_app/login.dart';
+import 'package:sepatuku_app/view/MaintancePage.dart';
+import 'package:sepatuku_app/view/favourite_page.dart';
+import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
+import 'package:sepatuku_app/view/bottomNavbar.dart';
+import 'package:sepatuku_app/view/login.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -49,14 +50,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.blue)),
               Text('Page',
                   style: GoogleFonts.raleway(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87)),
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  )),
             ],
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_rounded,
-                color: Colors.black87), // Menggunakan ikon panah kembali
+            icon: Icon(Icons.arrow_back_ios_new_rounded), // Menggunakan ikon panah kembali
             onPressed: () {
               Navigator.pop(
                   context); // Fungsi untuk kembali ke layar sebelumnya
@@ -93,12 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     final fotoprofil = userData['image'] ?? '';
                     final bio = userData['about'] ?? '';
                     final email = userData['email'] ?? '';
-                    // Set nilai awal pada field update
                     _usernameController.text = userData['username'];
-                    // _fbController.text = userData['fb'];
-                    // _igController.text = userData['instagram'];
-                    // _githubController.text = userData['github'];
-                    // _imageController.text = userData['image'];
                     _aboutController.text = userData['about'];
                     return Container(
                       width: double.infinity,
@@ -292,15 +287,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.pop(context);
                 // Tutup dialog
                 Future.microtask(() {
-                _updateUserData(
-                  _usernameController.text,
-                  _fbController.text,
-                  _igController.text,
-                  _githubController.text,
-                  _imageController.text,
-                  _aboutController.text,
-                );
-              });
+                  _updateUserData(
+                    _usernameController.text,
+                    _fbController.text,
+                    _igController.text,
+                    _githubController.text,
+                    _imageController.text,
+                    _aboutController.text,
+                  );
+                });
               },
               child: Text('Save Changes'),
             ),
@@ -352,18 +347,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
   }
-
-  // void _updateProfileData() {
-  //   // Panggil _updateUserData di sini
-  //   _updateUserData(
-  //     _usernameController.text,
-  //     _fbController.text,
-  //     _igController.text,
-  //     _githubController.text,
-  //     _imageController.text,
-  //     _aboutController.text,
-  //   );
-  // }
 }
 
 Widget _buildSocialMediaButton({
@@ -397,7 +380,7 @@ Widget _buildPage(int index) {
         title: 'Sepatuku',
       );
     case 1:
-      return MaintancePage();
+      return FavouritePage();
     case 2:
       return ProfilePage();
     default:

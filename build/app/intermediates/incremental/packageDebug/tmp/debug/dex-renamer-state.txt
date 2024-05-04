@@ -1,4 +1,4 @@
-#Sun Dec 10 01:04:51 ICT 2023
+#Thu May 02 21:22:48 ICT 2024
 base.2=D\:\\1. PERKULIAHAN\\Semester 5\\PRAK MOBILE\\sepatuku_app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes3.dex
 path.2=classes3.dex
 base.1=D\:\\1. PERKULIAHAN\\Semester 5\\PRAK MOBILE\\sepatuku_app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes2.dex
