@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sepatuku_app/view/OnBoardingPage.dart';
-import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
 import 'package:sepatuku_app/provider/theme_provider.dart';
 
 void main() async {
@@ -25,17 +23,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => ThemeProvider(),
-        builder: (context, _) {
-          final themeProvider = Provider.of<ThemeProvider>(context);
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'SepatuKu',
-            themeMode: themeProvider.themeMode,
-            theme: MyThemes.lightTheme,
-            darkTheme: MyThemes.darkTheme,
-            home: HomePage()
+    create: (context) => ThemeProvider(),
+    builder: (context, _) {
+      final themeProvider = Provider.of<ThemeProvider>(context);
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SepatuKu',
+        themeMode: themeProvider.themeMode,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        home: HomePage(),
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaleFactor: 1.0,
+            ),
+            child: child!,
           );
         },
       );
+    },
+  );
 }
