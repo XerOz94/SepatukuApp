@@ -64,17 +64,17 @@ class ProdukTerbaru extends StatelessWidget {
                             textStyle: GoogleFonts.raleway(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                             
+                              color: Theme.of(context).textTheme.bodyText1?.color,
                             ),
                             strokeColor: Colors.blue,
-                            strokeWidth: 0,
+                            strokeWidth: 2,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
                             height: 25,
-                            width: 80,
+                            width: 90,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -92,7 +92,7 @@ class ProdukTerbaru extends StatelessWidget {
                               },
                               child: Text(
                                 "Baca",
-                                style:  GoogleFonts.raleway(color: Colors.blue, fontWeight: FontWeight.bold),
+                                style:  GoogleFonts.raleway(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

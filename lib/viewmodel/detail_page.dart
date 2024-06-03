@@ -93,7 +93,7 @@ class _DetailPageState extends State<DetailPage> {
                     });
                   },
                   child: Text('Review',
-                      style: TextStyle(color: Colors.blueAccent)),
+                      style: TextStyle()),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -103,7 +103,7 @@ class _DetailPageState extends State<DetailPage> {
                     });
                   },
                   child: Text('Shoe Info',
-                      style: TextStyle(color: Colors.blueAccent)),
+                      style: TextStyle()),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -113,7 +113,7 @@ class _DetailPageState extends State<DetailPage> {
                     });
                   },
                   child:
-                      Text('Shop', style: TextStyle(color: Colors.blueAccent)),
+                      Text('Shop', style: TextStyle()),
                 ),
               ],
             ),

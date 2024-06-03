@@ -42,9 +42,9 @@ class _SepatukuPageState extends State<SepatukuPage> {
             children: [
               Text('Sepatu',
                   style: GoogleFonts.raleway(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      )),
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  )),
               Text('Ku',
                   style: GoogleFonts.raleway(
                       fontSize: 32,
@@ -56,9 +56,7 @@ class _SepatukuPageState extends State<SepatukuPage> {
             icon: Icon(Icons.stacked_line_chart, color: Colors.blue),
             onPressed: () {},
           ),
-          actions: [
-            ChangeThemeButtonWidget()
-          ],
+          actions: [ChangeThemeButtonWidget()],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -142,7 +140,13 @@ class _SepatukuPageState extends State<SepatukuPage> {
                 future: _dataFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                        child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context)
+                            .primaryColor, // Gunakan warna aksen berdasarkan tema
+                      ),
+                    ));
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
@@ -150,12 +154,11 @@ class _SepatukuPageState extends State<SepatukuPage> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount:
-                            2, // Menampilkan dua item dalam satu baris
-                        crossAxisSpacing: 8.0, // Spasi antar kolom
-                        mainAxisSpacing: 8.0, // Spasi antar baris
-                        childAspectRatio: 5/6
-                      ),
+                          crossAxisCount:
+                              2, // Menampilkan dua item dalam satu baris
+                          crossAxisSpacing: 8.0, // Spasi antar kolom
+                          mainAxisSpacing: 8.0, // Spasi antar baris
+                          childAspectRatio: 5 / 6),
                       itemCount: snapshot.data?.length ?? 0,
                       itemBuilder: (BuildContext context, int index) {
                         final dataIndex = index;

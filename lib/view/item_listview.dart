@@ -65,7 +65,8 @@ class ItemUser extends StatelessWidget {
                   style: GoogleFonts.raleway(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                   color: Colors.black,
+                  //  color: Theme.of(context).textTheme.bodyText1?.color,
                   ),
                   maxLines: 2, // Membatasi menjadi 2 baris
                   overflow: TextOverflow.ellipsis,

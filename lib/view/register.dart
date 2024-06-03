@@ -43,7 +43,7 @@ class _RegisterState extends State<Register> {
         'instagram': "https://web.instagram.com/",
         'github': "https://web.github.com/",
         'about': "No bio yet",
-        'image': "https://wallpapers-clan.com/wp-content/uploads/2022/08/default-pfp-30.jpg",
+        'image': "https://firebasestorage.googleapis.com/v0/b/sepatukuapp.appspot.com/o/Default_pfp.png?alt=media&token=b7d6a442-174b-4cae-a2d9-fbccc636f155",
         'email': email,
         // Tambahkan data tambahan sesuai kebutuhan
       });
