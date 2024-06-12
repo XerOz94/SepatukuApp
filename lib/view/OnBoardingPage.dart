@@ -83,9 +83,7 @@ class _HomePage extends State<HomePage> {
                   Text(
                     'Sepatu',
                     style: GoogleFonts.raleway(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 42, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     'Ku',
@@ -114,8 +112,7 @@ class _HomePage extends State<HomePage> {
                     backgroundColor: Colors.blueAccent,
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
+                    Navigator.pushReplacementNamed(context, '/register');
                   },
                   child: const Text(
                     "Getting Started",
@@ -123,26 +120,23 @@ class _HomePage extends State<HomePage> {
                   ),
                 ),
               ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already have an account?"),
-                const SizedBox(width: 4.0),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
-                  child: const Text(
-                    "Login.",
-                    style: TextStyle(color: Colors.blueAccent),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  const SizedBox(width: 4.0),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    child: const Text(
+                      "Login.",
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ],
           ),
         ),
@@ -150,5 +144,3 @@ class _HomePage extends State<HomePage> {
     );
   }
 }
-
-

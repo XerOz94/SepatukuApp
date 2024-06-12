@@ -23,49 +23,55 @@ class _RegisterState extends State<Register> {
     _passwordController.dispose();
     super.dispose();
   }
+
   void register() async {
     String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
-    User? user = await _authService.signUpWithEmailandPassword(email, password, context);
+    User? user =
+        await _authService.signUpWithEmailandPassword(email, password, context);
 
-    if(user != null){
+    if (user != null) {
       try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // Menentukan path koleksi (misalnya, 'users') di Firestore
-      String collectionPath = 'users';
+        // Menentukan path koleksi (misalnya, 'users') di Firestore
+        String collectionPath = 'users';
 
-      // Membuat dokumen dengan UID pengguna sebagai nama dokumen
-      await firestore.collection(collectionPath).doc(user.uid).set({
-        'username': username,
-        'fb': "https://web.facebook.com/",
-        'instagram': "https://web.instagram.com/",
-        'github': "https://web.github.com/",
-        'about': "No bio yet",
-        'image': "https://firebasestorage.googleapis.com/v0/b/sepatukuapp.appspot.com/o/Default_pfp.png?alt=media&token=b7d6a442-174b-4cae-a2d9-fbccc636f155",
-        'email': email,
-        // Tambahkan data tambahan sesuai kebutuhan
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("User is successfully created"),
-      backgroundColor: Colors.green)
-      );
-      } catch (e){
+        // Membuat dokumen dengan UID pengguna sebagai nama dokumen
+        await firestore.collection(collectionPath).doc(user.uid).set({
+          'username': username,
+          'fb': "https://web.facebook.com/",
+          'instagram': "https://web.instagram.com/",
+          'github': "https://web.github.com/",
+          'about': "No bio yet",
+          'image':
+              "https://firebasestorage.googleapis.com/v0/b/sepatukuapp.appspot.com/o/Default_pfp.png?alt=media&token=b7d6a442-174b-4cae-a2d9-fbccc636f155",
+          'email': email,
+          // Tambahkan data tambahan sesuai kebutuhan
+        });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Tidak dapat menyimpan data pengguna"),
-        backgroundColor: Colors.red,
-      ));
+            content: Text("User is successfully created"),
+            backgroundColor: Colors.green));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Tidak dapat menyimpan data pengguna"),
+          backgroundColor: Colors.red,
+        ));
       }
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-    } else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cannot create User"),
-      backgroundColor: Colors.red,
-      ),
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Cannot create User"),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -91,39 +97,40 @@ class _RegisterState extends State<Register> {
               "Register Account",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
-              ),
+            ),
             const Text(
               "Fill Your Details Account",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-              ),
-              const SizedBox(
-                height: 50.0,
-              ),
-              TextField(
-                controller: _usernameController,
+            ),
+            const SizedBox(
+              height: 50.0,
+            ),
+            TextField(
+              controller: _usernameController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 hintText: "Username",
               ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              TextField(
-                controller: _emailController,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextField(
+              controller: _emailController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.email),
                 hintText: "Email Address",
               ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-               TextField(
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextField(
               controller: _passwordController,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock), // Ganti Icons.key menjadi Icons.lock
+                prefixIcon:
+                    Icon(Icons.lock), // Ganti Icons.key menjadi Icons.lock
                 hintText: "Password",
               ),
               obscureText: true,
@@ -137,8 +144,7 @@ class _RegisterState extends State<Register> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                  ),
+                      borderRadius: BorderRadius.circular(15)),
                   backgroundColor: Colors.blueAccent,
                 ),
                 onPressed: () {

@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^4.12.2
   line_awesome_flutter: ^2.0.0
   google_fonts: ^6.1.0
+  camera: ^0.11.0+1
   path_provider: ^2.1.1
   curved_navigation_bar: ^1.0.3
   http: ^1.1.0
@@ -54,7 +55,7 @@ dependencies:
   sqflite: ^2.3.3
   image_picker: ^1.1.1
   firebase_storage: ^11.7.7
-  
+  flutter_local_notifications: ^13.0.0
 
 dev_dependencies:
   flutter_test:

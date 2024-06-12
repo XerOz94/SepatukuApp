@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/view/MaintancePage.dart';
 import 'package:sepatuku_app/view/favourite_page.dart';
 import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
 import 'package:sepatuku_app/view/bottomNavbar.dart';

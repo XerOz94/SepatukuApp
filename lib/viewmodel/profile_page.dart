@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sepatuku_app/provider/utils.dart';
-import 'package:sepatuku_app/view/MaintancePage.dart';
 import 'package:sepatuku_app/view/favourite_page.dart';
 import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
 import 'package:sepatuku_app/view/bottomNavbar.dart';
 import 'package:sepatuku_app/view/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:sepatuku_app/services/storage_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -27,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final currentUser = FirebaseAuth.instance.currentUser!;
   final StorageService _storageService = StorageService();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   Uint8List? _image;
 
@@ -68,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .update({
       'image': downloadURL,
     });
-
+    _showNotification();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Foto profil berhasil diperbarui'),
@@ -87,231 +87,267 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Profile Picture Updated',
+      'Profil Picture has been updated successfully.',
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 100,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Profile',
-                  style: GoogleFonts.raleway(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue)),
-              Text('Page',
-                  style: GoogleFonts.raleway(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ],
-          ),
-          leading: IconButton(
-            icon: Icon(Icons
-                .arrow_back_ios_new_rounded), // Menggunakan ikon panah kembali
-            onPressed: () {
-              Navigator.pop(
-                  context); // Fungsi untuk kembali ke layar sebelumnya
-            },
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                  onPressed: () {
-                    _showLogoutConfirmationDialog();
-                  },
-                  icon: Icon(
-                    Icons.logout,
-                    color: Colors.blue,
-                  )),
-            )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(currentUser.uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final userData =
-                      snapshot.data?.data() as Map<String, dynamic>?;
-                  if (userData != null) {
-                    final username = userData['username'] ?? '';
-                    final fotoprofil = userData['image'] ?? '';
-                    final bio = userData['about'] ?? '';
-                    final email = userData['email'] ?? '';
-                    _usernameController.text = userData['username'];
-                    _aboutController.text = userData['about'];
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Stack(
+    return WillPopScope(
+        onWillPop: () async {
+          final currentRoute = ModalRoute.of(context)?.settings.name;
+          if (currentRoute == '/login' || currentRoute == '/register') {
+            Navigator.pushReplacementNamed(context, '/sepatuku_page');
+            return false; // Mencegah aksi pop
+          }
+          return true;
+        },
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              toolbarHeight: 100,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Profile',
+                      style: GoogleFonts.raleway(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue)),
+                  Text('Page',
+                      style: GoogleFonts.raleway(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ],
+              ),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/sepatuku_page');
+                },
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                      onPressed: () {
+                        _showLogoutConfirmationDialog();
+                      },
+                      icon: Icon(
+                        Icons.logout,
+                        color: Colors.blue,
+                      )),
+                )
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(currentUser.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final userData =
+                          snapshot.data?.data() as Map<String, dynamic>?;
+                      if (userData != null) {
+                        final username = userData['username'] ?? '';
+                        final fotoprofil = userData['image'] ?? '';
+                        final bio = userData['about'] ?? '';
+                        final email = userData['email'] ?? '';
+                        _usernameController.text = userData['username'];
+                        _aboutController.text = userData['about'];
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              fotoprofil != null
-                                  ? CircleAvatar(
-                                      radius: 80,
-                                      backgroundImage: NetworkImage(fotoprofil),
-                                    )
-                                  : const CircleAvatar(
-                                      radius: 80,
-                                      backgroundImage: NetworkImage(
-                                          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png"),
-                                    ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors
-                                        .white, // Warna background lingkaran putih
-                                  ),
-                                  child: IconButton(
-                                    icon: Icon(Icons.camera_alt,
-                                        color: Colors.blue, size: 30),
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Wrap(
-                                            children: [
-                                              ListTile(
-                                                leading: Icon(Icons.photo),
-                                                title: Text('Galeri'),
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                  selectImage(
-                                                      ImageSource.gallery);
-                                                },
-                                              ),
-                                              ListTile(
-                                                leading: Icon(Icons.camera),
-                                                title: Text('Kamera'),
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                  selectImage(
-                                                      ImageSource.camera);
-                                                },
-                                              ),
-                                            ],
+                              Stack(
+                                children: [
+                                  fotoprofil != null
+                                      ? CircleAvatar(
+                                          radius: 80,
+                                          backgroundImage:
+                                              NetworkImage(fotoprofil),
+                                        )
+                                      : const CircleAvatar(
+                                          radius: 80,
+                                          backgroundImage: NetworkImage(
+                                              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png"),
+                                        ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors
+                                            .white, // Warna background lingkaran putih
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(Icons.camera_alt,
+                                            color: Colors.blue, size: 30),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Wrap(
+                                                children: [
+                                                  ListTile(
+                                                    leading: Icon(Icons.photo),
+                                                    title: Text('Galeri'),
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      selectImage(
+                                                          ImageSource.gallery);
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(Icons.camera),
+                                                    title: Text('Kamera'),
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      selectImage(
+                                                          ImageSource.camera);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           );
                                         },
-                                      );
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Text(username,
+                                  style: GoogleFonts.raleway(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30)),
+                              SizedBox(height: 5),
+                              Text(email!,
+                                  style: GoogleFonts.raleway(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic)),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildSocialMediaButton(
+                                      icon: Icons.facebook,
+                                      onPressed: () {
+                                        launchUrlString(userData['fb']!);
+                                      }),
+                                  _buildSocialMediaButton(
+                                      icon: FontAwesomeIcons.instagram,
+                                      onPressed: () {
+                                        launchUrlString(userData['instagram']);
+                                      }),
+                                  _buildSocialMediaButton(
+                                      icon: FontAwesomeIcons.github,
+                                      onPressed: () {
+                                        launchUrlString(userData['github']!);
+                                      }),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 120,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      _showEditProfileModal();
                                     },
+                                    child: const Text(
+                                      "Edit Profile",
+                                    ),
                                   ),
                                 ),
                               ),
+                              SizedBox(height: 20),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 48),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'About',
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      bio,
+                                      style:
+                                          TextStyle(fontSize: 16, height: 1.4),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                          const SizedBox(height: 20),
-                          Text(username,
-                              style: GoogleFonts.raleway(
-                                  fontWeight: FontWeight.bold, fontSize: 30)),
-                          SizedBox(height: 5),
-                          Text(email!,
-                              style: GoogleFonts.raleway(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16,
-                                  fontStyle: FontStyle.italic)),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildSocialMediaButton(
-                                  icon: Icons.facebook,
-                                  onPressed: () {
-                                    launchUrlString(userData['fb']!);
-                                  }),
-                              _buildSocialMediaButton(
-                                  icon: FontAwesomeIcons.instagram,
-                                  onPressed: () {
-                                    launchUrlString(userData['instagram']);
-                                  }),
-                              _buildSocialMediaButton(
-                                  icon: FontAwesomeIcons.github,
-                                  onPressed: () {
-                                    launchUrlString(userData['github']!);
-                                  }),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              height: 30,
-                              width: 120,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  _showEditProfileModal();
-                                },
-                                child: const Text(
-                                  "Edit Profile",
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 48),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'About',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  bio,
-                                  style: TextStyle(fontSize: 16, height: 1.4),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        );
+                      } else {
+                        return Text('Data tidak ditemukan');
+                      }
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error${snapshot.error}'),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  } else {
-                    return Text('Data tidak ditemukan');
-                  }
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error${snapshot.error}'),
+                  }),
+            ),
+            bottomNavigationBar: BotNavbar(
+                currentIndex: _currentPageIndex,
+                onTap: (index) {
+                  // Panggil Navigator untuk pindah halaman berdasarkan indeks
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => _buildPage(index),
+                    ),
                   );
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }),
-        ),
-        bottomNavigationBar: BotNavbar(
-            currentIndex: _currentPageIndex,
-            onTap: (index) {
-              // Panggil Navigator untuk pindah halaman berdasarkan indeks
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => _buildPage(index),
-                ),
-              );
-            }));
+                })));
   }
 
   void _showEditProfileModal() {
@@ -418,11 +454,15 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextButton(
               child: Text('Logout'),
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
                 _auth.signOut();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const Login()));
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('isLoggedIn', false);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login',
+                  (Route<dynamic> route) => false,
+                );
               },
             ),
           ],
@@ -463,6 +503,7 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.green,
         ),
       );
+      _showNotification();
     } catch (error) {
       // Tampilkan snackbar atau pesan error jika terjadi kesalahan
       ScaffoldMessenger.of(context).showSnackBar(

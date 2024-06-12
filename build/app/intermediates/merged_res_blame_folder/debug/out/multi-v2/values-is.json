@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sepatuku_app-mergeDebugResources-24:/values-is/values-is.xml",
+            "outputFile": "com.example.sepatuku_app-mergeDebugResources-29:/values-is/values-is.xml",
             "map": [
                 {
                     "source": "C:\\Users\\AMD\\.gradle\\caches\\transforms-3\\17fa2f85f92887a239732fa789549c4f\\transformed\\jetified-play-services-basement-18.3.0\\res\\values-is\\values.xml",

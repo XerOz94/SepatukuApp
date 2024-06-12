@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sepatuku_app/services/database_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:sepatuku_app/model/data.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 class DetailPage extends StatefulWidget {
   final SepatuModel data;
@@ -15,14 +17,27 @@ class DetailPage extends StatefulWidget {
   @override
   _DetailPageState createState() => _DetailPageState();
 }
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class _DetailPageState extends State<DetailPage> {
   late Future<bool> _isFavoriteFuture;
   int _selectedTabIndex = 0;
-  
+
+
   void initState() {
     super.initState();
     _isFavoriteFuture = DatabaseHelper.isFavorite(widget.data.id);
+
+    // Konfigurasi inisialisasi notifikasi
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+    InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   @override
@@ -334,10 +349,33 @@ class _DetailPageState extends State<DetailPage> {
         'material': widget.data.material,
         'shop': widget.data.shop,
       });
+      _showNotification();
     }
 
     setState(() {
       widget.data.isFavorite = !widget.data.isFavorite;
     });
+  }
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'favorite_channel_id',
+      'Favorite Channel',
+      channelDescription: 'Channel for favorite notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'SepatuKu',
+      widget.data.isFavorite
+          ? 'Removed from Favorites'
+          : 'Added to Favorites',
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
   }
 }

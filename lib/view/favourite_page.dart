@@ -5,6 +5,8 @@ import 'package:sepatuku_app/services/database_helper.dart';
 import 'package:sepatuku_app/view/bottomNavbar.dart';
 import 'package:sepatuku_app/viewmodel/profile_page.dart';
 import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 class FavouritePage extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class FavouritePage extends StatefulWidget {
 class _FavouritePageState extends State<FavouritePage> {
   int _currentPageIndex = 1;
   late Future<List<SepatuModel>> _favoritesFuture;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @override
   void initState() {
@@ -23,6 +26,39 @@ class _FavouritePageState extends State<FavouritePage> {
           .map((favorite) => SepatuModel.fromJson(favorite))
           .toList();
     });
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    initializeNotifications();
+  }
+
+  void initializeNotifications() {
+    final InitializationSettings initializationSettings =
+    InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      
+    );
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Favorite Status',
+      message,
+      platformChannelSpecifics,
+    );
   }
 
   @override
@@ -51,7 +87,7 @@ class _FavouritePageState extends State<FavouritePage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () {
-              Navigator.pop(context);
+             Navigator.pushNamed(context, '/sepatuku_page');
             },
           ),
           actions: [
@@ -88,6 +124,8 @@ class _FavouritePageState extends State<FavouritePage> {
                       onPressed: () {
                         // Panggil metode deleteFavorite dari DatabaseHelper
                         DatabaseHelper.deleteFavorite(sepatu.id).then((_) {
+                          // Tampilkan notifikasi setelah item dihapus
+                          showNotification('${sepatu.name} removed from favorites');
                           // Setelah item dihapus dari database, perbarui tampilan
                           setState(() {
                             // Hapus item dari daftar favorit yang ditampilkan

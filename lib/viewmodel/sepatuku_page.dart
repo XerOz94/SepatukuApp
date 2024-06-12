@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sepatuku_app/view/MaintancePage.dart';
 import 'package:sepatuku_app/view/favourite_page.dart';
 import 'package:sepatuku_app/viewmodel/produk_terbaru.dart';
 import 'package:sepatuku_app/view/bottomNavbar.dart';

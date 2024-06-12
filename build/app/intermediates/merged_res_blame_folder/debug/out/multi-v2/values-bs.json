@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sepatuku_app-mergeDebugResources-24:/values-bs/values-bs.xml",
+            "outputFile": "com.example.sepatuku_app-mergeDebugResources-29:/values-bs/values-bs.xml",
             "map": [
                 {
                     "source": "C:\\Users\\AMD\\.gradle\\caches\\transforms-3\\d12883dde0390e08dd2a1192741cec1b\\transformed\\browser-1.5.0\\res\\values-bs\\values-bs.xml",

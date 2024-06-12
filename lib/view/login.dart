@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sepatuku_app/view/OnBoardingPage.dart';
-import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
-// import 'package:sepatuku_app/home_page.dart';
 import 'register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sepatuku_app/services/firebase_auth_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sepatuku_app/viewmodel/sepatuku_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -17,6 +18,17 @@ class _LoginState extends State<Login> {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  @override
+  void initState() {
+    super.initState();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
   @override
   void dispose() {
@@ -32,6 +44,8 @@ class _LoginState extends State<Login> {
         await _authService.loginWithEmailandPassword(email, password, context);
 
     if (user != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Login success!"),
         backgroundColor: Colors.green,
@@ -41,6 +55,7 @@ class _LoginState extends State<Login> {
           MaterialPageRoute(
             builder: (context) => SepatukuPage(title: "SepatuKu App"),
           ));
+      _showNotification();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Login Failed!"),
@@ -49,10 +64,30 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future<void> _showNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Login Success',
+      'You have successfully logged in.',
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       body: Padding(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +99,7 @@ class _LoginState extends State<Login> {
                   onTap: () {
                     Navigator.push(
                       context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   },
                   child: Icon(
@@ -99,7 +134,8 @@ class _LoginState extends State<Login> {
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock), // Ganti Icons.key menjadi Icons.lock
+                prefixIcon:
+                    Icon(Icons.lock), // Ganti Icons.key menjadi Icons.lock
                 hintText: "Password",
               ),
               obscureText: true,
