@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             themeMode: themeProvider.themeMode,
             theme: lightTheme,
             darkTheme: darkTheme,
-            home: HomePage(),
+            home: isLoggedIn ? SepatukuPage(title: "SepatuKu App") : HomePage(),
             builder: (context, child) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
@@ -50,7 +50,6 @@ class MyApp extends StatelessWidget {
                 child: child!,
               );
             },
-            initialRoute: '/home',
             routes: {
               '/home': (context) => HomePage(),
               '/login': (context) => Login(),
